@@ -1,8 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package kelas;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
@@ -12,7 +9,7 @@ import javax.swing.JOptionPane;
 
 /**
  *
- * @author Good_Poeple
+ * @author Revaldo
  */
 public class user {
     String user_name,user_email,user_password,user_fullname;
@@ -86,5 +83,83 @@ public class user {
             JOptionPane.showMessageDialog(null, "user gagal ditambahkan");
         }
     }
+    public ResultSet tampilUser(){
+        query = "SELECT * FROM user";
+        try {
+            st = konek.createStatement();
+            rs = st.executeQuery(query);
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "data gagal ditampilkan");
+        }
+        
+        return rs;
+    }
     
+    public void hapusUser(){
+       query = "DELETE FROM user WHERE user_name = ?";
+        try {
+
+            ps = konek.prepareStatement(query);
+
+            ps.setString(1, user_name);
+
+            ps.executeUpdate();
+            ps.close();
+            JOptionPane.showMessageDialog(null, "User Berhasil Di Hapus");
+
+        } catch (SQLException sQLException) {
+            JOptionPane.showMessageDialog(null, "User Gagal Di Hapus");
+        }
+    }
+    
+    public void ubahUser(){
+       if (user_password.equals("")) {
+
+            query = "UPDATE user SET user_email = ?,"
+                    + " user_fullname = ?,"
+                    + " user_status = ?"
+                    + " WHERE user_name = ?";
+            try {
+
+                ps = konek.prepareStatement(query);
+
+                ps.setString(1, user_email);
+                ps.setString(2, user_fullname);
+                ps.setInt(3, user_status);
+                ps.setString(4, user_name);
+
+                ps.executeUpdate();
+                ps.close();
+                JOptionPane.showMessageDialog(null, "User Berhasil Di Ubah");
+
+            } catch (SQLException sQLException) {
+                JOptionPane.showMessageDialog(null, "User Gagal Di Ubah");
+            }
+
+        } else {
+             query = "UPDATE user SET user_email = ?,"
+                    + " user_fullname = ?,"
+                    + " user_status = ?,"
+                    + " user_password = MD5(?)"
+                    + " WHERE user_name = ?";
+            try {
+
+                ps = konek.prepareStatement(query);
+
+                ps.setString(1, user_email);
+                ps.setString(2, user_fullname);
+                ps.setInt(3, user_status);
+                ps.setString(4, user_password);
+                ps.setString(5, user_name);
+
+                ps.executeUpdate();
+                ps.close();
+                JOptionPane.showMessageDialog(null, "User Berhasil Di Ubah");
+
+            } catch (SQLException sQLException) {
+                JOptionPane.showMessageDialog(null, "User Gagal Di Ubah");
+            }
+        }
+
+    }
 }
